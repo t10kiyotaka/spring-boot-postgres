@@ -2,9 +2,13 @@ package com.example.demo.dao;
 
 import com.example.demo.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @Repository("postgres")
@@ -18,7 +22,8 @@ public class PersonDataAccessService implements PersonDao {
 
     @Override
     public int insertPerson(UUID id, Person person) {
-        return 0;
+        final String sql = "insert into person (id, name) values (?, ?)";
+        return jdbcTemplate.update(sql, id, person.getName());
     }
 
     @Override
@@ -44,11 +49,13 @@ public class PersonDataAccessService implements PersonDao {
 
     @Override
     public int updatePersonById(UUID id, Person person) {
-        return 0;
+        final String sql = "update person set name = ? where id = ?";
+        return jdbcTemplate.update(sql, person.getName(), id);
     }
 
     @Override
     public int deletePersonById(UUID id) {
-        return 0;
+        final String sql = "delete from person where id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 }
